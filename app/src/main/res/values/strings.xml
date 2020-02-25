@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">DeteccionDeCaidas</string>
+    <string name="button_text">Capturar</string>
+    <string name="generateFileButton_text">Generar archivo</string>
+
+    <string-array name="mov_type_array">
+        <item>Caminar</item>
+        <item>Caída</item>
+        <item>Correr</item>
+        <item>Saltar</item>
+        <item>Sentarse</item>
+        <item>Subir escaleras</item>
+    </string-array>
+</resources>
