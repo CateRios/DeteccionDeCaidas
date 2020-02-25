@@ -19,5 +19,5 @@ public class Movimiento {
     public String tipoMovimiento;
 
     @ColumnInfo(name = "fecha")
-    public Date fecha;
+    public String fecha;
 }

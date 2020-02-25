@@ -15,6 +15,7 @@ import com.ajts.androidmads.library.SQLiteToExcel;
 import com.example.detecciondecaidas.AppMediator;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
@@ -132,7 +133,8 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
                 Movimiento tmp = new Movimiento();
                 tmp.idUser = passedId;
                 tmp.tipoMovimiento = passedMov;
-                tmp.fecha = Calendar.getInstance().getTime();
+                Date date  = Calendar.getInstance().getTime();
+                tmp.fecha = "" + date;
                 tmpID = db.movimientoDao().insert(tmp);
                 Log.e("Mov", "" + tmpID);
                 insertCapturaToDatabase(tmpID, rotationMatrix, acelerometterMatrix, giroscopeMatrix);
