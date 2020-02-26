@@ -42,7 +42,6 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
 
     public long tmpID;
     public String passedId, passedMov;
-    boolean checkSensor = false;
 
 
     private Model(){
@@ -80,7 +79,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
                 insertCapturaToDatabase(tmpID, orientationAngles, acelerometterMatrix, giroscopeMatrix);
             }
         };
-        timer.scheduleAtFixedRate(insertData, 0, 30);
+        timer.scheduleAtFixedRate(insertData, 0, 10);
 
     }
 
@@ -108,19 +107,6 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
 
         SensorManager.getRotationMatrix(rotationMatrix, null, gravityMatrix, magneticMatrix);
         SensorManager.getOrientation(rotationMatrix, orientationAngles);
-
-        /*if(timer==12){
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    insertCapturaToDatabase(tmpID, orientationAngles, acelerometterMatrix, giroscopeMatrix);
-                    Log.e("Insercion", "" + tmpID);
-                }
-            });
-            timer = 0;
-        }
-        timer++;*/
-
 
     }
 
