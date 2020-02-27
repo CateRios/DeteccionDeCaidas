@@ -14,6 +14,7 @@ import androidx.room.Room;
 import com.ajts.androidmads.library.SQLiteToExcel;
 import com.example.detecciondecaidas.AppMediator;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -32,6 +33,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
     private Executor executor;
     private SQLiteToExcel sqLiteToExcel;
     private Timer timer;
+    SimpleDateFormat dateFormat;
 
     private float[] rotationMatrix = new float[9];
     private float[] magneticMatrix = new float[3];
@@ -42,12 +44,14 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
 
     public long tmpID;
     public String passedId, passedMov;
+    public String location;
 
 
     private Model(){
         appMediator = AppMediator.getInstance();
         executor = Executors.newSingleThreadExecutor();
         db = Room.databaseBuilder(appMediator.getApplicationContext(), AppDatabase.class, "MovimientosCapturados").build();
+        dateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
     }
 
     public static Model getInstance(){
@@ -62,24 +66,24 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
         //Create an instance of SensorManager
         sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         //Register Listeners
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 500000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 500000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 500000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), 500000);
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 insertMovToDatabase();
             }
         });
-        timer = new Timer();
+        /*timer = new Timer();
         TimerTask insertData = new TimerTask() {
             @Override
             public void run() {
                 insertCapturaToDatabase(tmpID, orientationAngles, acelerometterMatrix, giroscopeMatrix);
             }
         };
-        timer.scheduleAtFixedRate(insertData, 0, 10);
+        timer.scheduleAtFixedRate(insertData, 0, 10);*/
 
     }
 
@@ -107,6 +111,14 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
 
         SensorManager.getRotationMatrix(rotationMatrix, null, gravityMatrix, magneticMatrix);
         SensorManager.getOrientation(rotationMatrix, orientationAngles);
+
+        //Insertar datos
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                insertCapturaToDatabase(tmpID, orientationAngles, acelerometterMatrix, giroscopeMatrix);
+            }
+        });
 
     }
 
@@ -140,31 +152,43 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
             @Override
             public void onCompleted(String filePath) {
                Log.e("DB", filePath);
+               location = filePath;
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e("DB Error", ""+e);
+                location = "" + e;
 
             }
         });
     }
 
+    @Override
+    public String getLocation() {
+        return this.location;
+    }
+
+
     private void insertCapturaToDatabase(long tmpID, float[] orientationAngles, float[] acelerometterMatrix, float[] giroscopeMatrix) {
 
         Captura captura = new Captura();
         captura.idMov = tmpID;
+        //Datos del acelerómetro
         captura.x = acelerometterMatrix[0];
         captura.y = acelerometterMatrix[1];
         captura.z = acelerometterMatrix[2];
+        //Datos del giroscopo
         captura.roll = giroscopeMatrix[0];
         captura.pitch = giroscopeMatrix[1];
         captura.yaw = giroscopeMatrix[2];
+        //Instante de tiempo en que se registra la muestra
+        captura.time = "" + dateFormat.format(new Date());
         //azimut
         captura.compass = orientationAngles[0];
 
         long id = db.capturaDao().insert(captura);
-        Log.e("Captura" , "" + id);
+        Log.e("Captura" , "" + id + " tiempo: " + captura.time);
 
     }
 
@@ -176,7 +200,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
     @Override
     public void endSensorDataRecollection(){
         sensorManager.unregisterListener(this);
-        timer.cancel();
+        //timer.cancel();
     }
 
 

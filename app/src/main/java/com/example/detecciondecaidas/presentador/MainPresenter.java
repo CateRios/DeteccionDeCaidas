@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.detecciondecaidas.AppMediator;
 import com.example.detecciondecaidas.modelo.Model;
 import com.example.detecciondecaidas.modelo.ModelInterface;
-import com.example.detecciondecaidas.vista.MainActivity;
 
 public class MainPresenter implements MainPresenterInterface {
     private AppMediator appMediator;
@@ -22,8 +21,10 @@ public class MainPresenter implements MainPresenterInterface {
     }
 
     @Override
-    public void generateFile(Context context) {
+    public String generateFile(Context context) {
+
         model.generateFile(context);
+        return model.getLocation();
     }
 
     @Override
@@ -35,4 +36,5 @@ public class MainPresenter implements MainPresenterInterface {
     public void endSensorDataRecollection() {
         model.endSensorDataRecollection();
     }
+
 }

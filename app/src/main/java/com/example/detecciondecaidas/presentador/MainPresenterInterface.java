@@ -10,5 +10,6 @@ public interface MainPresenterInterface {
 
     void passDataToModel(String id, String movimiento);
 
-    void generateFile(Context context);
+    String generateFile(Context context);
+
 }

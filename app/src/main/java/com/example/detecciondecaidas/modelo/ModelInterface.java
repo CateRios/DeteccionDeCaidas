@@ -13,4 +13,6 @@ public interface ModelInterface {
     void insertMovToDatabase();
 
     void generateFile(Context context);
+
+    String getLocation();
 }

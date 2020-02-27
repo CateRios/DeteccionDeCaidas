@@ -40,4 +40,7 @@ public class Captura {
 
     @ColumnInfo(name = "compass")
     public float compass;
+
+    @ColumnInfo(name = "time")
+    public String time;
 }

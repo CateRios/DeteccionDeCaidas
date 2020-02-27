@@ -3,13 +3,9 @@ package com.example.detecciondecaidas.vista;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -22,15 +18,14 @@ import com.example.detecciondecaidas.presentador.MainPresenterInterface;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener, MainActivityInterface, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements MainActivityInterface, View.OnClickListener {
 
     //Global variables
     Button button;
     Button generateFileButton;
     Spinner movTypeSelector;
     Timer buttonTimer;
-    ArrayAdapter<CharSequence> adapter;
-    Toast initToast, endToast, checkIdToast;
+    Toast initToast, endToast, checkIdToast, locationToast;
     EditText editId;
 
     private MainPresenterInterface presenter;
@@ -58,9 +53,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         buttonTimer = new Timer();
         movTypeSelector = findViewById(R.id.movTypeSelector);
         mp = MediaPlayer.create(this, R.raw.sample);
-       // adapter = ArrayAdapter.createFromResource(this, R.array.sensor_type_array, R.layout.sensor_type_selector_item);
-        //adapter.setDropDownViewResource(R.layout.sensor_type_selector_item);
-        //sensorTypeSelector.setAdapter(adapter);
 
         //Create toast
         initToast = Toast.makeText(this, "Iniciando captura de movimientos", Toast.LENGTH_SHORT);
@@ -76,21 +68,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onPause(){
         super.onPause();
-       // sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-            //Almacenar datos
-        }else if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-            //Almacenar datos
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
     }
 
     @Override
@@ -101,18 +78,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             String movimiento = this.movTypeSelector.getSelectedItem().toString();
             //Comprobar que campo Id no está vacío
             if(!id.isEmpty()){
+                button.setEnabled(false);
+                //Pasar datos del movimiento al modelo
+                presenter.passDataToModel(id, movimiento);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //Pasar datos del movimiento al modelo
-                presenter.passDataToModel(id, movimiento);
+
                 //Empezar a tomar datos
-                button.setEnabled(false);
                 initToast.show();
-                presenter.initSensorDataRecollection(context);
                 mp.start();
+                presenter.initSensorDataRecollection(context);
                 buttonTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -134,7 +112,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }else if(v.getId() == findViewById(R.id.generateFileButton).getId()){
 
-            presenter.generateFile(context);
+            String location = presenter.generateFile(context);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            locationToast = Toast.makeText(this, location, Toast.LENGTH_LONG);
+            locationToast.show();
         }
     }
 }
