@@ -22,43 +22,43 @@
 
     <EditText
         android:id="@+id/editId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="141dp"
+        android:layout_height="38dp"
         android:ems="10"
         android:hint="Insertar id"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.366"
+        app:layout_constraintHorizontal_bias="0.265"
         app:layout_constraintStart_toEndOf="@+id/idTextView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.346" />
+        app:layout_constraintVertical_bias="0.372" />
 
     <TextView
         android:id="@+id/sensorTypeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="88dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="44dp"
         android:text="Movimiento:"
         android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/idTextView"
-        app:layout_constraintVertical_bias="0.019" />
+        app:layout_constraintVertical_bias="0.077" />
 
     <Spinner
         android:id="@+id/movTypeSelector"
-        android:layout_width="206dp"
-        android:layout_height="24dp"
+        android:layout_width="133dp"
+        android:layout_height="33dp"
         android:layout_marginBottom="140dp"
         android:entries="@array/mov_type_array"
         app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.198"
         app:layout_constraintStart_toEndOf="@+id/sensorTypeTextView"
         app:layout_constraintTop_toBottomOf="@+id/editId"
-        app:layout_constraintVertical_bias="0.764" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/button"

@@ -66,10 +66,10 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
         //Create an instance of SensorManager
         sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         //Register Listeners
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 500000);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 500000);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 500000);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), 500000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 100000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 100000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 100000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), 100000);
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -135,7 +135,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
                 tmp.fecha = "" + date;
                 tmpID = db.movimientoDao().insert(tmp);
                 Log.e("Mov", "" + tmpID);
-                insertCapturaToDatabase(tmpID, rotationMatrix, acelerometterMatrix, giroscopeMatrix);
+                //insertCapturaToDatabase(tmpID, rotationMatrix, acelerometterMatrix, giroscopeMatrix);
 
     }
 
