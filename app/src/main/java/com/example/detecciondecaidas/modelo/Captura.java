@@ -19,6 +19,9 @@ public class Captura {
                 onDelete = CASCADE)
     public long idMov;
 
+    @ColumnInfo (name = "indice_mov")
+    public int indiceMov;
+
 
     @ColumnInfo(name = "x")
     public float x;

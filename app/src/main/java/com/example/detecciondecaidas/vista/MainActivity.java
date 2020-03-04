@@ -76,11 +76,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             //Obtener datos del movimiento
             String id = this.editId.getText().toString();
             String movimiento = this.movTypeSelector.getSelectedItem().toString();
+            int indice = movTypeSelector.getSelectedItemPosition();
             //Comprobar que campo Id no está vacío
             if(!id.isEmpty()){
                 button.setEnabled(false);
                 //Pasar datos del movimiento al modelo
-                presenter.passDataToModel(id, movimiento);
+                presenter.passDataToModel(id, movimiento, indice);
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {
@@ -112,14 +113,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
         }else if(v.getId() == findViewById(R.id.generateFileButton).getId()){
 
-            String location = presenter.generateFile(context);
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            locationToast = Toast.makeText(this, location, Toast.LENGTH_LONG);
-            locationToast.show();
+            presenter.generateFile(context);
+            //locationToast = Toast.makeText(this, location, Toast.LENGTH_LONG);
+            //locationToast.show();
         }
     }
 }

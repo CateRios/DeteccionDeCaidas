@@ -5,7 +5,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Handler;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -44,7 +42,8 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
 
     public long tmpID;
     public String passedId, passedMov;
-    public String location;
+    //public String location;
+    public int indice;
 
 
     private Model(){
@@ -66,10 +65,10 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
         //Create an instance of SensorManager
         sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
         //Register Listeners
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 100000);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 100000);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 100000);
-        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), 100000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 10000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), 10000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), 10000);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY), 10000);
         executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -88,9 +87,10 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
     }
 
     @Override
-    public void getMovementData(String id, String movimiento){
+    public void getMovementData(String id, String movimiento, int indice){
         this.passedId = id;
         this.passedMov = movimiento;
+        this.indice = indice;
     }
 
 
@@ -152,13 +152,13 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
             @Override
             public void onCompleted(String filePath) {
                Log.e("DB", filePath);
-               location = filePath;
+               //location = filePath;
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e("DB Error", ""+e);
-                location = "" + e;
+                //location = "" + e;
 
             }
         });
@@ -166,7 +166,8 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
 
     @Override
     public String getLocation() {
-        return this.location;
+        //return this.location;
+        return null;
     }
 
 
@@ -186,6 +187,8 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
         captura.time = "" + dateFormat.format(new Date());
         //azimut
         captura.compass = orientationAngles[0];
+        //Indice
+        captura.indiceMov = this.indice;
 
         long id = db.capturaDao().insert(captura);
         Log.e("Captura" , "" + id + " tiempo: " + captura.time);

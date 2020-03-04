@@ -8,7 +8,7 @@ public interface MainPresenterInterface {
 
     public void endSensorDataRecollection();
 
-    void passDataToModel(String id, String movimiento);
+    void passDataToModel(String id, String movimiento, int indice);
 
     String generateFile(Context context);
 
