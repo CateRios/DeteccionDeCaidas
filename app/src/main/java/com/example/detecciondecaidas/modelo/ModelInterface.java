@@ -8,7 +8,7 @@ public interface ModelInterface {
 
     public void endSensorDataRecollection();
 
-    void getMovementData(String id, String movimiento, int indice);
+    void getMovementData(String id, String movimiento, int indice, int periodo);
 
     void insertMovToDatabase();
 

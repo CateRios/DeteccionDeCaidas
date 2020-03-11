@@ -16,6 +16,9 @@ public class Movimiento {
     @ColumnInfo(name = "tipo_movimiento")
     public String tipoMovimiento;
 
+    @ColumnInfo(name = "periodo")
+    public int periodo;
+
     @ColumnInfo(name = "fecha")
     public String fecha;
 }

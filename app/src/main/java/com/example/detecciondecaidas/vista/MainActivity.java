@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     Timer buttonTimer;
     Toast initToast, endToast, checkIdToast, locationToast;
     EditText editId;
+    EditText editPeriod;
 
     private MainPresenterInterface presenter;
     private AppMediator appMediator;
@@ -53,11 +54,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         buttonTimer = new Timer();
         movTypeSelector = findViewById(R.id.movTypeSelector);
         mp = MediaPlayer.create(this, R.raw.sample);
+        editPeriod = findViewById(R.id.editPeriod);
 
         //Create toast
         initToast = Toast.makeText(this, "Iniciando captura de movimientos", Toast.LENGTH_SHORT);
         endToast = Toast.makeText(this, "Captura de movimientos finalizada", Toast.LENGTH_SHORT);
-        checkIdToast = Toast.makeText(this, "El campo id no puede estar vacío", Toast.LENGTH_SHORT);
+        checkIdToast = Toast.makeText(this, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -76,12 +78,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
             //Obtener datos del movimiento
             String id = this.editId.getText().toString();
             String movimiento = this.movTypeSelector.getSelectedItem().toString();
+            String periodo = editPeriod.getText().toString();
             int indice = movTypeSelector.getSelectedItemPosition();
             //Comprobar que campo Id no está vacío
-            if(!id.isEmpty()){
+            if(!id.isEmpty() && !periodo.isEmpty()){
                 button.setEnabled(false);
                 //Pasar datos del movimiento al modelo
-                presenter.passDataToModel(id, movimiento, indice);
+                presenter.passDataToModel(id, movimiento, indice, Integer.parseInt(periodo));
                 try {
                     Thread.sleep(2000);
                 } catch (InterruptedException e) {

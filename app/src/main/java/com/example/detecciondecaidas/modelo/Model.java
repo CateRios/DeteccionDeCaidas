@@ -17,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -44,12 +45,13 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
     public String passedId, passedMov;
     //public String location;
     public int indice;
+    public int periodo;
 
 
     private Model(){
         appMediator = AppMediator.getInstance();
         executor = Executors.newSingleThreadExecutor();
-        db = Room.databaseBuilder(appMediator.getApplicationContext(), AppDatabase.class, "MovimientosCapturados").build();
+        db = Room.databaseBuilder(appMediator.getApplicationContext(), AppDatabase.class, "MovimientosCapturados").fallbackToDestructiveMigration().build();
         dateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
     }
 
@@ -75,22 +77,22 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
                 insertMovToDatabase();
             }
         });
-        /*timer = new Timer();
+        timer = new Timer();
         TimerTask insertData = new TimerTask() {
             @Override
             public void run() {
                 insertCapturaToDatabase(tmpID, orientationAngles, acelerometterMatrix, giroscopeMatrix);
             }
         };
-        timer.scheduleAtFixedRate(insertData, 0, 10);*/
-
+        timer.scheduleAtFixedRate(insertData, 10, this.periodo);
     }
 
     @Override
-    public void getMovementData(String id, String movimiento, int indice){
+    public void getMovementData(String id, String movimiento, int indice, int periodo){
         this.passedId = id;
         this.passedMov = movimiento;
         this.indice = indice;
+        this.periodo = periodo;
     }
 
 
@@ -113,12 +115,12 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
         SensorManager.getOrientation(rotationMatrix, orientationAngles);
 
         //Insertar datos
-        executor.execute(new Runnable() {
+        /*executor.execute(new Runnable() {
             @Override
             public void run() {
                 insertCapturaToDatabase(tmpID, orientationAngles, acelerometterMatrix, giroscopeMatrix);
             }
-        });
+        });*/
 
     }
 
@@ -131,6 +133,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
                 Movimiento tmp = new Movimiento();
                 tmp.idUser = passedId;
                 tmp.tipoMovimiento = passedMov;
+                tmp.periodo = this.periodo;
                 Date date  = Calendar.getInstance().getTime();
                 tmp.fecha = "" + date;
                 tmpID = db.movimientoDao().insert(tmp);
@@ -203,7 +206,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
     @Override
     public void endSensorDataRecollection(){
         sensorManager.unregisterListener(this);
-        //timer.cancel();
+        timer.cancel();
     }
 
 

@@ -16,8 +16,8 @@ public class MainPresenter implements MainPresenterInterface {
     }
 
     @Override
-    public void passDataToModel(String id, String movimiento, int indice){
-        model.getMovementData(id, movimiento, indice);
+    public void passDataToModel(String id, String movimiento, int indice, int periodo){
+        model.getMovementData(id, movimiento, indice, periodo);
     }
 
     @Override
