@@ -158,9 +158,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
 
                 } else {
-
                     //Toast para indicar que la app no va a funcionar
-                    Toast.makeText(this, "No se generará el fichero", Toast.LENGTH_SHORT);
+                    Toast.makeText(this, "No se generará el fichero", Toast.LENGTH_SHORT).show();
                 }
                 return;
             }
