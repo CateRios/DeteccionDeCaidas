@@ -1,8 +1,12 @@
 package com.example.detecciondecaidas.vista;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -33,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private AppMediator appMediator;
     Context context;
     MediaPlayer mp;
+    //Constants
+    public static final int MY_PERMISSIONS_REQUEST_STORAGE = 100;
 
     @Override
 
@@ -63,25 +69,25 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == findViewById(R.id.button).getId()){
+        if (v.getId() == findViewById(R.id.button).getId()) {
             //Obtener datos del movimiento
             String id = this.editId.getText().toString();
             String movimiento = this.movTypeSelector.getSelectedItem().toString();
             String periodo = editPeriod.getText().toString();
             int indice = movTypeSelector.getSelectedItemPosition();
             //Comprobar que campo Id no está vacío
-            if(!id.isEmpty() && !periodo.isEmpty()){
+            if (!id.isEmpty() && !periodo.isEmpty()) {
                 button.setEnabled(false);
                 //Pasar datos del movimiento al modelo
                 presenter.passDataToModel(id, movimiento, indice, Integer.parseInt(periodo));
@@ -110,15 +116,60 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                         });
                     }
                 }, 15000);
-            }else{
+            } else {
                 checkIdToast.show();
             }
 
-        }else if(v.getId() == findViewById(R.id.generateFileButton).getId()){
+        } else if (v.getId() == findViewById(R.id.generateFileButton).getId()) {
 
-            presenter.generateFile(context);
-            //locationToast = Toast.makeText(this, location, Toast.LENGTH_LONG);
-            //locationToast.show();
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+
+                // Permission is not granted
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_STORAGE);
+
+            } else {
+                // Permission has already been granted
+                presenter.generateFile(context);
+
+            }
+
+        }
+    }
+
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                    //LLamada al modelo
+                    presenter.generateFile(context);
+
+
+                } else {
+
+                    //Toast para indicar que la app no va a funcionar
+                    Toast.makeText(this, "No se generará el fichero", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+            default: {
+                break;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
         }
     }
 }
