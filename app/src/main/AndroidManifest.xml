@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".AppMediator">
-        <activity android:name=".vista.MainActivity">
+        <activity android:name=".vista.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
