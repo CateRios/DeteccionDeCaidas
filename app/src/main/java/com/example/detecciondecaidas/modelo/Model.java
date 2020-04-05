@@ -146,7 +146,7 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
     public void generateFile(Context context) {
         sqLiteToExcel = new SQLiteToExcel(context, "MovimientosCapturados");
         long time = Calendar.getInstance().getTimeInMillis();
-        sqLiteToExcel.exportAllTables( time + ".", new SQLiteToExcel.ExportListener() {
+        sqLiteToExcel.exportAllTables( time + ".xls", new SQLiteToExcel.ExportListener() {
             @Override
             public void onStart() {
 
