@@ -17,6 +17,9 @@ public interface CapturaDao {
     @Query("SELECT * from capturas WHERE idMov IN (:idMovimientos)")
     List<Captura> loadAllByMovimientoIds(int[] idMovimientos);
 
+    @Query("DELETE from capturas")
+    public int clearTable();
+
     @Insert
     long insert(Captura captura);
 

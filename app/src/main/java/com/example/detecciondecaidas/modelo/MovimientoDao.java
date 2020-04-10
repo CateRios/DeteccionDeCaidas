@@ -16,6 +16,9 @@ public interface MovimientoDao {
     @Query("SELECT * from movimientos WHERE id_user IN (:idUsers)")
     List<Movimiento> loadAllByUserIds(int[] idUsers);
 
+    @Query("DELETE from movimientos")
+    public int clearTable();
+
     @Insert
     long insert(Movimiento movimiento);
 

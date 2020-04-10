@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,9 +31,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     //Global variables
     Button button;
     Button generateFileButton;
+    Button deleteDataButton;
     Spinner movTypeSelector;
     Timer buttonTimer;
-    Toast initToast, endToast, checkIdToast, locationToast;
+    Toast initToast, endToast, checkIdToast;
     EditText editId;
     EditText editPeriod;
 
@@ -58,10 +60,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
         //Get view elements
         editId = findViewById(R.id.editId);
-        button = findViewById(R.id.button);
+        button = findViewById(R.id.initButton);
         button.setOnClickListener(this);
         generateFileButton = findViewById(R.id.generateFileButton);
         generateFileButton.setOnClickListener(this);
+        deleteDataButton = findViewById(R.id.deleteDBButton);
+        deleteDataButton.setOnClickListener(this);
         buttonTimer = new Timer();
         movTypeSelector = findViewById(R.id.movTypeSelector);
         mp = MediaPlayer.create(this, R.raw.sample);
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == findViewById(R.id.button).getId()) {
+        if (v.getId() == findViewById(R.id.initButton).getId()) {
             //Obtener datos del movimiento
             String id = this.editId.getText().toString();
             String movimiento = this.movTypeSelector.getSelectedItem().toString();
@@ -156,6 +160,11 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 presenter.generateFile(context);
 
             }
+
+        }else if(v.getId() == findViewById(R.id.deleteDBButton).getId()){
+            //Delete DB data
+            presenter.deleteDBData();
+            Toast.makeText(this, "Se han eliminado los datos", Toast.LENGTH_SHORT).show();
 
         }
     }

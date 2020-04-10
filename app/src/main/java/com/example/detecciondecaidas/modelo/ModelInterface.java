@@ -15,4 +15,7 @@ public interface ModelInterface {
     void generateFile(Context context);
 
     String getLocation();
+
+    void deleteDBData();
+
 }

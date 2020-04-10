@@ -28,6 +28,12 @@ public class MainPresenter implements MainPresenterInterface {
     }
 
     @Override
+    public void deleteDBData() {
+        model.deleteDBData();
+        //return model.checkData();
+    }
+
+    @Override
     public void initSensorDataRecollection(Context context){
         model.initSensorDataRecollection(context);
     }

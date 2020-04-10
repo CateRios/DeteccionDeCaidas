@@ -12,4 +12,5 @@ public interface MainPresenterInterface {
 
     String generateFile(Context context);
 
+    void deleteDBData();
 }

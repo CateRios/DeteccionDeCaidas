@@ -173,6 +173,24 @@ public class Model extends AppCompatActivity implements ModelInterface, SensorEv
         return null;
     }
 
+    @Override
+    public void deleteDBData() {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                deleteData();
+            }
+        });
+    }
+
+    private void deleteData(){
+         if(db.capturaDao().clearTable() > 0){
+             if(db.movimientoDao().clearTable() > 0){
+                 Log.e("Delete", "Borrado modelo");
+             }
+        }
+    }
+
 
     private void insertCapturaToDatabase(long tmpID, float[] orientationAngles, float[] acelerometterMatrix, float[] giroscopeMatrix) {
 
