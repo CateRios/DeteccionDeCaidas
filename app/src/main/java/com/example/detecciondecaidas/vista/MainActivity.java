@@ -8,7 +8,10 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     private AppMediator appMediator;
     Context context;
     MediaPlayer mp;
+    Vibrator vibrator;
+
     //Constants
     public static final int MY_PERMISSIONS_REQUEST_STORAGE = 100;
 
@@ -60,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         buttonTimer = new Timer();
         movTypeSelector = findViewById(R.id.movTypeSelector);
         mp = MediaPlayer.create(this, R.raw.sample);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         editPeriod = findViewById(R.id.editPeriod);
 
         //Create toast
@@ -100,6 +106,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                 //Empezar a tomar datos
                 initToast.show();
                 mp.start();
+
+                if (Build.VERSION.SDK_INT >= 26) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                }else {
+                    vibrator.vibrate(200);
+                }
+
                 presenter.initSensorDataRecollection(context);
                 buttonTimer.schedule(new TimerTask() {
                     @Override
@@ -112,6 +125,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
                                 button.setEnabled(true);
                                 endToast.show();
                                 mp.start();
+
+                                if (Build.VERSION.SDK_INT >= 26) {
+                                    vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE));
+                                }else {
+                                    vibrator.vibrate(200);
+                                }
+
                             }
                         });
                     }
