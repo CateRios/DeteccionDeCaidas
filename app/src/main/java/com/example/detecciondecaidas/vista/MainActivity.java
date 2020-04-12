@@ -1,18 +1,24 @@
 package com.example.detecciondecaidas.vista;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     Button deleteDataButton;
     Spinner movTypeSelector;
     Timer buttonTimer;
-    Toast initToast, endToast, checkIdToast;
+    Toast initToast, endToast, checkIdToast, deleteToast;
     EditText editId;
     EditText editPeriod;
 
@@ -76,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
         initToast = Toast.makeText(this, "Iniciando captura de movimientos", Toast.LENGTH_SHORT);
         endToast = Toast.makeText(this, "Captura de movimientos finalizada", Toast.LENGTH_SHORT);
         checkIdToast = Toast.makeText(this, "Los campos no pueden estar vacíos", Toast.LENGTH_SHORT);
+        deleteToast = Toast.makeText(this, "Se han eliminado los datos", Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -163,9 +170,28 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
 
         }else if(v.getId() == findViewById(R.id.deleteDBButton).getId()){
             //Delete DB data
-            presenter.deleteDBData();
-            Toast.makeText(this, "Se han eliminado los datos", Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Titulo")
+                    .setMessage("Esto borrará todos los datos. ¿Desea continuar?")
+                    .setPositiveButton("OK",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    presenter.deleteDBData();
+                                    deleteToast.show();
+                                }
+                            })
+                    .setNegativeButton("CANCELAR",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
 
+                                }
+                            });
+
+
+
+            builder.create().show();
         }
     }
 
